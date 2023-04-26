@@ -1,5 +1,8 @@
 package com.demo.app.employeeDepartmentCRUDOps.constants;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public final class Constants {
 
 
@@ -28,4 +31,19 @@ public final class Constants {
 	  public static final String DEPT_NOT_EXIST_TO_UPDATE = "Department does't found with given Id";
 	  
 	  
+	  public static final String TOPIC_EXCHANGE_NAME = "add-emp-topic";
+
+	  public static final String NEW_EMPLOYEE_QUEUE = "new-employee";
+	  //public static final String NEW_EMPLOYEE_BGV_QUEUE = "new-emp-bgv";
+	  
+	  public static final Map<String, String> EXCHANGE_QUEUE_MAPPING = new HashMap<String, String>()
+	  {
+	      {
+	          put("add-emp-topic", "new-employee");
+	          put("add-emp-topic", "new-emp-bgv");
+	     
+	      };
+	  };
+
+		  
 }

@@ -6,6 +6,7 @@ import java.util.Set;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,6 +30,9 @@ import com.demo.app.employeeDepartmentCRUDOps.model.Department;
 import com.demo.app.employeeDepartmentCRUDOps.model.Employee;
 import com.demo.app.employeeDepartmentCRUDOps.service.DepartmentService;
 import com.demo.app.employeeDepartmentCRUDOps.service.EmployeeService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 
 @RestController
 @RequestMapping("/api/employee")
@@ -43,11 +47,14 @@ public class EmployeeController {
 	@Autowired
 	ModelMapper modelMapper;
 	
+	@Autowired
+	RabbitTemplate rabbitTemplate;
+	
     Logger logger = LoggerFactory.getLogger(EmployeeController.class);
 
 	
 	@PostMapping("/add")
-	public ResponseVO addNewEmployee(@RequestBody EmployeeDTO employee) {
+	public ResponseVO addNewEmployee(@RequestBody EmployeeDTO employee) throws JsonProcessingException {
 
 		Employee emp = modelMapper.map(employee, Employee.class);
 		Set<Department> deptSet = new HashSet<>();
@@ -77,6 +84,10 @@ public class EmployeeController {
 		emp.setDepartments(deptSet);
 		logger.info("EMP OBJECT===> "+emp.toString());	
 		Employee savedEmp = employeeService.save(emp);
+				
+		rabbitTemplate.convertAndSend(Constants.TOPIC_EXCHANGE_NAME, "new.emp", 
+				employee);
+		
 		
 		return new ResponseVO(Constants.STATUS_OK, Constants.STATUS_SUCCESS, Constants.EMP_ADD_SUCCESS_MESSAGE, savedEmp);
 			 
