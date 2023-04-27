@@ -34,7 +34,9 @@ public final class Constants {
 	  public static final String TOPIC_EXCHANGE_NAME = "add-emp-topic";
 
 	  public static final String NEW_EMPLOYEE_QUEUE = "new-employee";
-	  //public static final String NEW_EMPLOYEE_BGV_QUEUE = "new-emp-bgv";
+
+	  public static final String ACTION_ADD = "ADD";
+	  public static final String ACTION_UPDATE = "UPDATE";
 	  
 	  public static final Map<String, String> EXCHANGE_QUEUE_MAPPING = new HashMap<String, String>()
 	  {
@@ -44,6 +46,8 @@ public final class Constants {
 	     
 	      };
 	  };
+
+	 
 
 		  
 }

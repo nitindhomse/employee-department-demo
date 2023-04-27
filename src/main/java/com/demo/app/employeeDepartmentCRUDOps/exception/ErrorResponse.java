@@ -2,22 +2,15 @@ package com.demo.app.employeeDepartmentCRUDOps.exception;
 
 public class ErrorResponse {
 	
-	private Integer statusCode;
-	private String statusMessage = "failed";
+	private String message = "failed";
 	private String errorMessage;
 	private String timestamp;
 	
-	public Integer getStatusCode() {
-		return statusCode;
+	public String getMessage() {
+		return message;
 	}
-	public String getStatusMessage() {
-		return statusMessage;
-	}
-	public void setStatusMessage(String statusMessage) {
-		this.statusMessage = statusMessage;
-	}
-	public void setStatusCode(Integer statusCode) {
-		this.statusCode = statusCode;
+	public void setMessage(String message) {
+		this.message = message;
 	}
 	public String getErrorMessage() {
 		return errorMessage;

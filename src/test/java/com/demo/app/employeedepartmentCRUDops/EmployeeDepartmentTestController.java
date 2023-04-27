@@ -72,7 +72,7 @@ public class EmployeeDepartmentTestController {
 		Employee empObj = outputObjMapper.readValue(empOutputObjectStr, Employee.class);
 		
 		Mockito.when(empService.save(any(Employee.class))).thenReturn(empObj);
-		Mockito.when(deptService.findByDeptName(any(String.class))).thenReturn(dept);
+		Mockito.when(deptService.findByDeptName(any(String.class))).thenReturn(Optional.of(dept));
 		
 		this.mockMvc.perform(MockMvcRequestBuilders.post("/api/employee/add/")
 				.contentType(MEDIA_TYPE_JSON_UTF8).content(inputJsonString))
@@ -98,7 +98,7 @@ public class EmployeeDepartmentTestController {
 		Employee empObj = outputObjMapper.readValue(empOutputObjectStr, Employee.class);
 		
 		Mockito.when(empService.save(any(Employee.class))).thenReturn(empObj);
-		Mockito.when(deptService.findByDeptName(any(String.class))).thenReturn(dept);
+		Mockito.when(deptService.findByDeptName(any(String.class))).thenReturn(Optional.of(dept));
 
 		this.mockMvc.perform(MockMvcRequestBuilders.post("/api/employee/add/")
 				.contentType(MEDIA_TYPE_JSON_UTF8).content(inputJsonString))

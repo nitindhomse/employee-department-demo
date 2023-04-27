@@ -3,18 +3,28 @@ package com.demo.app.employeeDepartmentCRUDOps.dto;
 import java.io.Serializable;
 import java.util.Set;
 
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.NotNull;
+
 public class EmployeeDTO implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	private Long empId;
+	
+	@NotNull
+	@Pattern(regexp = "^(?!\\s*$).+", message = "Employee Name must not be blank")	
 	private String empName;
+	
 	private String city;
+	
+	@Pattern(regexp="(^$|[0-9]{10})", message = "Please enter valid phone number")
 	private String phoneNumber;
+	
+	@NotNull
+	@Pattern(regexp = "^(?!\\s*$).+", message = "Gender field must not be blank")
 	private String gender;
+	
 	private Set<String> departmentList;
 	
 	public Set<String> getDepartmentList() {
