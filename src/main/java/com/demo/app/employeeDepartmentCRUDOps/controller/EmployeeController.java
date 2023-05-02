@@ -1,6 +1,7 @@
 package com.demo.app.employeeDepartmentCRUDOps.controller;
 
 
+import java.util.List;
 import java.util.Optional;
 import javax.validation.Valid;
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.demo.app.employeeDepartmentCRUDOps.dto.AllDataResponseVO;
 import com.demo.app.employeeDepartmentCRUDOps.dto.EmployeeDTO;
@@ -84,5 +86,11 @@ public class EmployeeController {
 	public AllDataResponseVO getAllEmployees(@RequestBody SearchCriteria criteria) {
 		
 		return employeeService.getAllEmployeesList(criteria);			 
+	}
+	
+	@GetMapping("/search")
+	public List<Employee> search(@RequestParam("query") String searchQuery) {
+
+		return employeeService.findEmployeeByNameOrPhoneNumber(searchQuery);
 	}
 }

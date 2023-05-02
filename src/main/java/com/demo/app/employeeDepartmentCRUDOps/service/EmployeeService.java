@@ -2,6 +2,7 @@ package com.demo.app.employeeDepartmentCRUDOps.service;
 
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -13,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import com.demo.app.employeeDepartmentCRUDOps.constants.Constants;
@@ -26,6 +28,7 @@ import com.demo.app.employeeDepartmentCRUDOps.exception.InvalidDepartmentExcepti
 import com.demo.app.employeeDepartmentCRUDOps.model.Department;
 import com.demo.app.employeeDepartmentCRUDOps.model.Employee;
 
+@Transactional
 @Service
 public class EmployeeService {
 	
@@ -110,5 +113,9 @@ public class EmployeeService {
 	public void deleteById(Long id) {
 		employeeRepository.deleteById(id);
 		
+	}
+	
+	public List<Employee> findEmployeeByNameOrPhoneNumber(String searchQuery){
+		return employeeRepository.findWhereNameOrPhoneNumberLike(searchQuery);
 	}
 }

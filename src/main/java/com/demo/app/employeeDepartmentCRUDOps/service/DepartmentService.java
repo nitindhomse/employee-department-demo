@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.demo.app.employeeDepartmentCRUDOps.constants.Constants;
 import com.demo.app.employeeDepartmentCRUDOps.dao.DepartmentRepository;
@@ -15,6 +16,7 @@ import com.demo.app.employeeDepartmentCRUDOps.dto.AllDataResponseVO;
 import com.demo.app.employeeDepartmentCRUDOps.dto.SearchCriteria;
 import com.demo.app.employeeDepartmentCRUDOps.model.Department;
 
+@Transactional
 @Service
 public class DepartmentService {
 
