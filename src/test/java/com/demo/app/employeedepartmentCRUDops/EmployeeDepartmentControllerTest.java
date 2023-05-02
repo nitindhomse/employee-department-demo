@@ -3,7 +3,9 @@ package com.demo.app.employeedepartmentCRUDops;
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -24,7 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class EmployeeDepartmentTestController {
+public class EmployeeDepartmentControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -45,10 +47,10 @@ public class EmployeeDepartmentTestController {
 		dept.setDeptId(5L);
 		dept.setDeptName("Production");
 
-		String expectedOutputJsonStr = "{\"statusCode\":200,\"statusMessage\":\"success\",\"message\":\"success\",\"data\":{\"deptId\":5,\"deptName\":\"Production\"}}";
+		String expectedOutputJsonStr = "{\"deptId\":5,\"deptName\":\"Production\"}";
 		Mockito.when(deptService.findById(any(Long.class))).thenReturn(Optional.ofNullable(dept));
 
-		this.mockMvc.perform(MockMvcRequestBuilders.get("/api/department/getDepartment/" + deptIdToFind))
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/api/department/" + deptIdToFind))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 	            .andExpect(content().json(expectedOutputJsonStr))
 				.andDo(MockMvcResultHandlers.print());
@@ -60,21 +62,26 @@ public class EmployeeDepartmentTestController {
 
 		
         
-		String inputJsonString = "{\"empName\":\"Nitin\",\"city\":\"Pune\",\"phoneNumber\":\"+5544433\",\"gender\":\"Male\",\"departmentList\":[\"IT\"]}";
-		String expectedOutputJsonString = "{\"statusCode\":200,\"statusMessage\":\"success\",\"message\":\"Employee has been saved successfully\",\"data\":{\"empId\":2,\"empName\":\"Nitin\",\"city\":\"Pune\",\"phoneNumber\":\"+5544433\",\"gender\":\"Male\",\"departments\":[{\"deptId\":2,\"deptName\":\"IT\"}]}}";
-		String empOutputObjectStr = "{\"empId\":2,\"empName\":\"Nitin\",\"city\":\"Pune\",\"phoneNumber\":\"+5544433\",\"gender\":\"Male\",\"departments\":[{\"deptId\":2,\"deptName\":\"IT\"}]}";
+		String inputJsonString = "{\"empName\":\"Archit\",\"city\":\"Nagpur\",\"phoneNumber\":\"1234567890\",\"gender\":\"Male\",\"departmentList\":[\"Production\"]}";
+		String expectedOutputJsonString = "{\"empId\":20,\"empName\":\"Archit\",\"city\":\"Nagpur\",\"phoneNumber\":\"1234567890\",\"gender\":\"Male\",\"departments\":[{\"deptId\":20,\"deptName\":\"Production\"}]}";
+		String empOutputObjectStr = "{\"empId\":20,\"empName\":\"Archit\",\"city\":\"Nagpur\",\"phoneNumber\":\"1234567890\",\"gender\":\"Male\",\"departments\":[{\"deptId\":20,\"deptName\":\"Production\"}]}";
 
+		
 		Department dept = new Department();
-		dept.setDeptId(2L);
-		dept.setDeptName("IT");
+		dept.setDeptId(20L);
+		dept.setDeptName("Production");
+		Set<Department> deptSet = new HashSet<Department>();
+		deptSet.add(dept);
+		
 		
 		ObjectMapper outputObjMapper = new ObjectMapper();
 		Employee empObj = outputObjMapper.readValue(empOutputObjectStr, Employee.class);
+		empObj.setDepartments(deptSet);
 		
 		Mockito.when(empService.save(any(Employee.class))).thenReturn(empObj);
 		Mockito.when(deptService.findByDeptName(any(String.class))).thenReturn(Optional.of(dept));
 		
-		this.mockMvc.perform(MockMvcRequestBuilders.post("/api/employee/add/")
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/api/employee/")
 				.contentType(MEDIA_TYPE_JSON_UTF8).content(inputJsonString))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 	            .andExpect(content().json(expectedOutputJsonString))
@@ -83,24 +90,23 @@ public class EmployeeDepartmentTestController {
 	
 	@Test
 	public void addEmployeeNullOrBlankDataTest() throws Exception {
-
+  
+		 
+		String inputJsonString = "{\"city\":\"Nagpur\",\"phoneNumber\":\"1234567890\",\"gender\":\"\",\"departmentList\":[\"Production\"]}";
+		String expectedOutputJsonString = "{\"errors\":[\"Employee Name must not be blank\"]}";
 		
-        
-		String inputJsonString = "{\"empName\":\"\",\"city\":\"Pune\",\"phoneNumber\":\"+5544433\",\"gender\":\"\",\"departmentList\":[\"IT\"]}";
-		String expectedOutputJsonString = "{\"statusCode\":200,\"statusMessage\":\"failed\",\"message\":\"Employee Name and Gender are mandatory field\",\"data\":null}";
-		String empOutputObjectStr = "{\"empId\":1,\"empName\":\"Nitin\",\"city\":\"Pune\",\"phoneNumber\":\"+5544433\",\"gender\":\"Male\",\"departments\":[{\"deptId\":2,\"deptName\":\"IT\"}]}";
-
 		Department dept = new Department();
-		dept.setDeptId(2L);
-		dept.setDeptName("IT");
+		dept.setDeptId(20L);
+		dept.setDeptName("Production");
+		Set<Department> deptSet = new HashSet<Department>();
+		deptSet.add(dept);
+		
 		
 		ObjectMapper outputObjMapper = new ObjectMapper();
-		Employee empObj = outputObjMapper.readValue(empOutputObjectStr, Employee.class);
+		Employee empObj = outputObjMapper.readValue(inputJsonString, Employee.class);
+		empObj.setDepartments(deptSet);
 		
-		Mockito.when(empService.save(any(Employee.class))).thenReturn(empObj);
-		Mockito.when(deptService.findByDeptName(any(String.class))).thenReturn(Optional.of(dept));
-
-		this.mockMvc.perform(MockMvcRequestBuilders.post("/api/employee/add/")
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/api/employee/")
 				.contentType(MEDIA_TYPE_JSON_UTF8).content(inputJsonString))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 	            .andExpect(content().json(expectedOutputJsonString))

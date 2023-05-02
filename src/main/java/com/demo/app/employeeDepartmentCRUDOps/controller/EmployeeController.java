@@ -21,7 +21,6 @@ import com.demo.app.employeeDepartmentCRUDOps.exception.EmployeeNotExistsExcepti
 import com.demo.app.employeeDepartmentCRUDOps.constants.Constants;
 import com.demo.app.employeeDepartmentCRUDOps.model.Employee;
 import com.demo.app.employeeDepartmentCRUDOps.service.EmployeeService;
-import com.demo.app.employeeDepartmentCRUDOps.service.EmployeeServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 @RestController
@@ -32,19 +31,17 @@ public class EmployeeController {
 	
 	
 	private final EmployeeService employeeService;
-	private final EmployeeServiceImpl employeeServiceImpl;
 	private final RabbitTemplate rabbitTemplate;
 	
-	public EmployeeController(EmployeeService employeeService,  RabbitTemplate rabbitTemplate, EmployeeServiceImpl employeeServiceImpl) {	
+	public EmployeeController(EmployeeService employeeService,  RabbitTemplate rabbitTemplate) {	
 		this.employeeService = employeeService;
-		this.employeeServiceImpl = employeeServiceImpl;
 		this.rabbitTemplate = rabbitTemplate;	
 	}
 	
 	@PostMapping("/")
 	public Employee create( @Valid @RequestBody EmployeeDTO employee) throws JsonProcessingException {
 		
-		Optional<Employee> emp = employeeServiceImpl.buildEmployee(employee, Constants.ACTION_ADD);					
+		Optional<Employee> emp = employeeService.buildEmployee(employee, Constants.ACTION_ADD);					
 		// Send Message to new-employee Messaging Queue
 		rabbitTemplate.convertAndSend(Constants.TOPIC_EXCHANGE_NAME, "new.emp", employee);
 			
@@ -54,7 +51,7 @@ public class EmployeeController {
 	@PutMapping("/")
 	public Employee update( @Valid @RequestBody EmployeeDTO employee) {
 	
-		Optional<Employee> emp = employeeServiceImpl.buildEmployee(employee, Constants.ACTION_UPDATE);					
+		Optional<Employee> emp = employeeService.buildEmployee(employee, Constants.ACTION_UPDATE);					
 		// Send Message to new-employee Messaging Queue
 		rabbitTemplate.convertAndSend(Constants.TOPIC_EXCHANGE_NAME, "new.emp", employee);
 				
@@ -86,6 +83,6 @@ public class EmployeeController {
 	@GetMapping("/getAllEmployees")
 	public AllDataResponseVO getAllEmployees(@RequestBody SearchCriteria criteria) {
 		
-		return employeeServiceImpl.getAllEmployeesList(criteria);			 
+		return employeeService.getAllEmployeesList(criteria);			 
 	}
 }

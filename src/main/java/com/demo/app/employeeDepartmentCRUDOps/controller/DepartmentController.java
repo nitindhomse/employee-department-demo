@@ -21,7 +21,7 @@ import com.demo.app.employeeDepartmentCRUDOps.exception.DuplicateDepartmentExcep
 import com.demo.app.employeeDepartmentCRUDOps.exception.InvalidDepartmentException;
 import com.demo.app.employeeDepartmentCRUDOps.model.Department;
 import com.demo.app.employeeDepartmentCRUDOps.service.DepartmentService;
-import com.demo.app.employeeDepartmentCRUDOps.service.DepartmentServiceImpl;
+
 
 @RestController
 @RequestMapping("/api/department")
@@ -30,13 +30,11 @@ public class DepartmentController {
 	private final Logger logger = LoggerFactory.getLogger(DepartmentController.class);
 
 	private DepartmentService departmentService;
-	private DepartmentServiceImpl departmentServiceImpl;
 	private ModelMapper modelMapper;
 
-	public DepartmentController(DepartmentService departmentService, DepartmentServiceImpl departmentServiceImpl,
+	public DepartmentController(DepartmentService departmentService, 
 			ModelMapper modelMapper) {
 		this.departmentService = departmentService;
-		this.departmentServiceImpl = departmentServiceImpl;
 		this.modelMapper = modelMapper;
 	}
 
@@ -84,7 +82,7 @@ public class DepartmentController {
 	@GetMapping("/getAllDepartments")
 	public AllDataResponseVO getAllDepartments(@RequestBody SearchCriteria criteria) {
 
-		return departmentServiceImpl.getAllDepartmentList(criteria);
+		return departmentService.getAllDepartmentList(criteria);
 	}
 
 }

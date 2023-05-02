@@ -3,4 +3,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.demo.app.employeeDepartmentCRUDOps.model.Employee;
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
+	boolean existsById(Long empId);
+
 }
